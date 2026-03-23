@@ -9,7 +9,8 @@ INDEX = ROOT / "index.html"
 FULL_BACKUP = ROOT / "index.full.html"
 
 
-def extract_ne_viewer_body(html: str) -> str:
+def extract_ne_viewer_body_div_depth(html: str) -> str:
+    """仅按 div 深度截断（正文内大量嵌套 div 时易提前结束，仅作兜底）。"""
     marker = '<div class="ne-viewer-body">'
     start = html.find(marker)
     if start == -1:
@@ -43,9 +44,29 @@ def extract_ne_viewer_body(html: str) -> str:
     return "".join(chunks)
 
 
+def extract_ne_viewer_body(html: str) -> str:
+    """优先用「正文容器闭合」定位，避免卡片内 </div> 导致截断错误。"""
+    m = re.search(
+        r'<div class="ne-viewer-body">\s*([\s\S]*)\s*</div>\s*</article>',
+        html,
+    )
+    if m:
+        return m.group(1).strip()
+    return extract_ne_viewer_body_div_depth(html)
+
+
 def normalize_inner(inner: str) -> str:
     inner = re.sub(r"\sne-image-hide\b", "", inner)
     inner = inner.replace("websocket-midsev", "websocket-midserv")
+    # 语雀「六.测试用例」下：行内文件条 + 嵌入式预览（离线常显示为空框）
+    # 注意：[\s\S]*? 不能跨多个 ne-p，否则会吞掉从文档首段到该附件之间的全部正文
+    inner = re.sub(
+        r'<ne-p[^>]*>(?:(?!</ne-p>).)*?<ne-card data-card-name="file"[\s\S]*?</ne-card>[\s\S]*?</ne-p>',
+        "",
+        inner,
+        count=1,
+    )
+    inner = re.sub(r"<ne-hole[^>]*>[\s\S]*?</ne-hole>", "", inner, count=1)
     return inner
 
 
@@ -131,12 +152,12 @@ def build_page(inner: str) -> str:
 
 
 def load_source_and_inner() -> str:
-    """优先从当前 index 提取；若为精简版则从 index.full.html 读取。"""
+    """优先 index.full.html（完整语雀页），否则当前 index。"""
     candidates = []
-    if INDEX.exists():
-        candidates.append(INDEX.read_text(encoding="utf-8", errors="replace"))
     if FULL_BACKUP.exists():
         candidates.append(FULL_BACKUP.read_text(encoding="utf-8", errors="replace"))
+    if INDEX.exists():
+        candidates.append(INDEX.read_text(encoding="utf-8", errors="replace"))
 
     last_err = None
     for raw in candidates:

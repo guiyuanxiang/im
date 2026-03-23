@@ -1,0 +1,374 @@
+/* 聊天系统技术文档 — 离线阅读样式（不依赖语雀拆包 CSS） */
+
+:root {
+  --doc-bg: #f6f7f9;
+  --doc-paper: #ffffff;
+  --doc-text: #1d2129;
+  --doc-muted: #646a73;
+  --doc-border: #e5e6eb;
+  --doc-accent: #1668dc;
+  --doc-accent-soft: rgba(22, 104, 220, 0.08);
+  --doc-radius: 10px;
+  --doc-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --font-sans: "SF Pro SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  color: var(--doc-text);
+  background: var(--doc-bg);
+  line-height: 1.65;
+}
+
+.doc-app {
+  min-height: 100vh;
+}
+
+/* --- 顶栏 --- */
+.doc-header {
+  background: var(--doc-paper);
+  border-bottom: 1px solid var(--doc-border);
+  box-shadow: var(--doc-shadow);
+  padding: 1.25rem 1.5rem 1.35rem;
+}
+
+.doc-header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.doc-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--doc-text);
+}
+
+.doc-lead {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--doc-muted);
+  max-width: 52rem;
+}
+
+/* --- 主布局：目录 + 正文 --- */
+.doc-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem 3rem;
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .doc-layout {
+    grid-template-columns: 1fr;
+    padding: 1rem 0.75rem 2rem;
+  }
+}
+
+/* --- 目录 --- */
+.doc-toc {
+  position: sticky;
+  top: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--doc-paper);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  box-shadow: var(--doc-shadow);
+  max-height: calc(100vh - 1.5rem);
+  overflow: auto;
+  font-size: 0.8125rem;
+}
+
+.doc-toc-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--doc-muted);
+}
+
+.doc-toc nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.doc-toc a {
+  color: var(--doc-muted);
+  text-decoration: none;
+  line-height: 1.4;
+  padding: 0.2rem 0;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.doc-toc a:hover {
+  color: var(--doc-accent);
+  background: var(--doc-accent-soft);
+}
+
+.doc-toc .toc-h1 {
+  font-weight: 600;
+  color: var(--doc-text);
+  margin-top: 0.35rem;
+}
+
+.doc-toc .toc-h1:first-child {
+  margin-top: 0;
+}
+
+.doc-toc .toc-h2 {
+  padding-left: 0.65rem;
+  font-size: 0.8125rem;
+}
+
+.doc-toc .toc-h3 {
+  padding-left: 1.15rem;
+  font-size: 0.75rem;
+  opacity: 0.95;
+}
+
+@media (max-width: 900px) {
+  .doc-toc {
+    position: static;
+    max-height: none;
+  }
+}
+
+/* --- 正文纸 --- */
+.doc-main {
+  min-width: 0;
+}
+
+.doc-paper {
+  background: var(--doc-paper);
+  border: 1px solid var(--doc-border);
+  border-radius: var(--doc-radius);
+  box-shadow: var(--doc-shadow);
+  padding: 1.75rem 1.5rem 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .doc-paper {
+    padding: 2rem 2.25rem 3rem;
+  }
+}
+
+/* --- Lake / 语雀正文 --- */
+.ne-viewer {
+  font-size: 0.9375rem;
+  color: var(--doc-text);
+}
+
+.doc-paper .ne-viewer-body {
+  max-width: 52rem;
+}
+
+/* 隐藏语雀阅读器装饰：锚点图标、折叠箭头、OCR 等 */
+.ne-heading-anchor,
+.ne-heading-fold,
+.ne-ui-image-ocr-mask,
+.ne-ui-image-inner-button-wrap {
+  display: none !important;
+}
+
+ne-heading-anchor,
+ne-heading-fold {
+  display: none !important;
+}
+
+ne-heading-ext {
+  display: block;
+}
+
+ne-heading-content {
+  display: block;
+}
+
+ne-p {
+  display: block;
+  margin: 0.65rem 0;
+}
+
+ne-h1,
+ne-h2,
+ne-h3 {
+  display: block;
+  scroll-margin-top: 5rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 1.75rem 0 0.75rem;
+  color: var(--doc-text);
+}
+
+ne-h1 {
+  font-size: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--doc-border);
+  margin-top: 2rem;
+}
+
+ne-h1:first-of-type {
+  margin-top: 0;
+}
+
+ne-h2 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+ne-h3 {
+  font-size: 1.05rem;
+  margin-top: 1.15rem;
+  color: #2b2f36;
+}
+
+/* 语雀里标题曾用红色内联样式，阅读页统一为正文色 */
+ne-heading-content ne-text[style] {
+  color: var(--doc-text) !important;
+}
+
+ne-text {
+  display: inline;
+}
+
+ne-text[ne-bold="true"] {
+  font-weight: 600;
+}
+
+/* 仅隐藏标题行内的装饰图标，避免误伤正文/流程图里的 SVG */
+ne-h1 .ne-icon,
+ne-h2 .ne-icon,
+ne-h3 .ne-icon,
+ne-h1 .ne-lark-icon,
+ne-h2 .ne-lark-icon,
+ne-h3 .ne-lark-icon {
+  display: none !important;
+}
+
+/* 表格 */
+.ne-table-wrap,
+.ne-table-wrap *,
+ne-table-box {
+  box-sizing: border-box;
+}
+
+.ne-table-wrap {
+  margin: 1rem 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  border: 1px solid var(--doc-border);
+}
+
+.ne-table-inner-wrap table,
+.ne-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.ne-table-inner-wrap th,
+.ne-table-inner-wrap td,
+.ne-table-wrap th,
+.ne-table-wrap td {
+  border: 1px solid var(--doc-border);
+  padding: 0.5rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.ne-table-inner-wrap thead th,
+.ne-table-wrap thead th {
+  background: #f2f4f7;
+  font-weight: 600;
+}
+
+/* 图片卡片 */
+ne-card[data-card-name="image"] {
+  display: block;
+  margin: 1.25rem 0;
+}
+
+.ne-card-container {
+  max-width: 100%;
+}
+
+.ne-image-wrap {
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--doc-border);
+  background: #fafbfc;
+}
+
+.ne-image-box {
+  line-height: 0;
+}
+
+.ne-image-wrap .ne-image,
+.ne-image-wrap img {
+  max-width: 100%;
+  height: auto !important;
+  display: block !important;
+  opacity: 1 !important;
+  vertical-align: top;
+}
+
+.ne-image-wrap .ne-image.ne-image-hide {
+  opacity: 1 !important;
+  height: auto !important;
+  max-width: 100% !important;
+  display: block !important;
+}
+
+/* 填充与换行 */
+.ne-viewer-b-filler {
+  display: none;
+}
+
+ne-p br:only-child {
+  display: none;
+}
+
+/* 链接 */
+a[href] {
+  color: var(--doc-accent);
+}
+
+a[href]:hover {
+  text-decoration: underline;
+}
+
+/* 内联 SVG（流程图等） */
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+iframe {
+  max-width: 100%;
+  border: 1px solid var(--doc-border);
+  border-radius: 8px;
+}

@@ -176,6 +176,27 @@ body {
   }
 }
 
+/* 页顶：本地 XMind 测试用例（与正文「六.测试用例」呼应） */
+.local-xmind-link {
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--doc-accent-soft);
+  border: 1px solid rgba(22, 104, 220, 0.2);
+  border-radius: 8px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.local-xmind-link a {
+  color: var(--doc-accent);
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.local-xmind-link a:hover {
+  text-decoration: underline;
+}
+
 /* --- Lake / 语雀正文 --- */
 .ne-viewer {
   font-size: 0.9375rem;

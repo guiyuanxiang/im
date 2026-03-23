@@ -67,7 +67,20 @@ def normalize_inner(inner: str) -> str:
         count=1,
     )
     inner = re.sub(r"<ne-hole[^>]*>[\s\S]*?</ne-hole>", "", inner, count=1)
+    inner = truncate_after_mq_listener_paragraph(inner)
     return inner
+
+
+def truncate_after_mq_listener_paragraph(inner: str) -> str:
+    """该段（MQ listener / 钉钉 / 错误 id）所在 ne-p 之后的正文全部删除。"""
+    needle = "如果业务逻辑处于mq的listener中"
+    idx = inner.find(needle)
+    if idx == -1:
+        return inner
+    end = inner.find("</ne-p>", idx)
+    if end == -1:
+        return inner
+    return inner[: end + len("</ne-p>")]
 
 
 def extract_lead(_inner: str) -> str:
@@ -137,6 +150,10 @@ def build_page(inner: str) -> str:
 
       <main class="doc-main">
         <div class="doc-paper">
+          <p class="local-xmind-link">
+            <strong>测试用例（XMind）</strong>：
+            <a href="./聊天系统技术文档_files/新后台-聊天系统测试用例（修正版）.xmind">新后台-聊天系统测试用例（修正版）.xmind</a>
+          </p>
           <article class="ne-viewer lakex-yuque-theme-light ne-typography-traditional" id="doc">
             <div class="ne-viewer-body">
 {inner}
